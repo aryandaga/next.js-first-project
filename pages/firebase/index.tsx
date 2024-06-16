@@ -1,12 +1,11 @@
 "use client";
 import Login from "@/pages/firebase/login";
 import { getAuth, onAuthStateChanged } from "firebase/auth";
-import { app } from "@/pages/firebase/config";
+import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
 
 export default function Home() {
-  const auth = getAuth(app);
   const router = useRouter();
 
   useEffect(() => {

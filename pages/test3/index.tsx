@@ -10,6 +10,13 @@ import {
   updateTodo as updateTodoAPI,
   deleteTodo as deleteTodoAPI,
 } from "@/pages/api/api";
+import { useRouter } from "next/navigation";
+import { getAuth, signOut } from "firebase/auth";
+import { app } from "@/pages/firebase/config";
+
+// export function dashbaord() {
+
+// }
 
 const TestPage: React.FunctionComponent = () => {
   const [todo, setTodo] = useState<string>(""); // We are making sure this is a string.
@@ -68,6 +75,18 @@ const TestPage: React.FunctionComponent = () => {
   const incompleteTodos = todos.filter((todo) => !todo.done);
   const completeTodos = todos.filter((todo) => todo.done);
 
+  const auth = getAuth(app);
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/firebase/login");
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
+  };
+
   return (
     <>
       <DefaultLayout>
@@ -95,21 +114,21 @@ const TestPage: React.FunctionComponent = () => {
             <Card className="w-full bg-black">
               {/* <CardHeader>Header</CardHeader> */}
               <div className="grid grid-cols-3 gap-4 w-full p-3 max-md:grid-cols-1">
-                <div className="p-1 border-1 rounded-2xl">
-                  <div className="font-bold text-2xl flex justify-center items-center text-white mb-5">
+                <div className="p-1 border-1 border-grey rounded-2xl">
+                  <div className="font-sans text-2xl flex justify-center items-center text-white mb-5">
                     All Tasks
                   </div>
                   <ul id="todo-list" className="mt-5">
                     {todos.map((todo) => (
                       <li
                         key={todo.id}
-                        className="flex justify-between items-center p-2 border-1 rounded-2xl mb-2 text-white"
+                        className="flex justify-between items-center p-2 border-1 rounded-2xl mb-2 text-white font-sans"
                       >
                         <Checkbox
                           isSelected={todo.done}
                           onValueChange={() => toggleTodoStatus(todo.id)}
                           id={`task-${todo.id}`}
-                          className="font-bold"
+                          className="text-white font-sans"
                         >
                           {todo.value}
                         </Checkbox>
@@ -135,21 +154,21 @@ const TestPage: React.FunctionComponent = () => {
                     ))}
                   </ul>
                 </div>
-                <div className="p-1 border-1 rounded-2xl">
-                  <div className="font-bold text-2xl flex justify-center items-center text-white mb-5">
+                <div className="p-1 border-1 border-grey rounded-2xl">
+                  <div className="font-sans text-2xl flex justify-center items-center text-white mb-5">
                     Incomplete Tasks
                   </div>
                   <ul id="todo-list" className="mt-5">
                     {incompleteTodos.map((todo) => (
                       <li
                         key={todo.id}
-                        className="flex justify-between items-center p-2 border-1 rounded-2xl mb-2 text-white"
+                        className="flex justify-between items-center p-2 border-1 rounded-2xl mb-2 text-white font-sans"
                       >
                         <Checkbox
                           isSelected={todo.done}
                           onValueChange={() => toggleTodoStatus(todo.id)}
                           id={`task-${todo.id}`}
-                          className="font-bold"
+                          className="text-white font-sans"
                         >
                           {todo.value}
                         </Checkbox>
@@ -175,7 +194,7 @@ const TestPage: React.FunctionComponent = () => {
                     ))}
                   </ul>
                 </div>
-                <div className="p-1 border-1 rounded-2xl">
+                <div className="p-1 border-1 border-grey rounded-2xl">
                   <div className="font-bold text-2xl flex justify-center items-center text-white mb-5">
                     Complete Tasks
                   </div>
@@ -189,7 +208,7 @@ const TestPage: React.FunctionComponent = () => {
                           isSelected={todo.done}
                           onValueChange={() => toggleTodoStatus(todo.id)}
                           id={`task-${todo.id}`}
-                          className="font-bold"
+                          className="text-white font-sans"
                         >
                           {todo.value}
                         </Checkbox>
@@ -220,6 +239,15 @@ const TestPage: React.FunctionComponent = () => {
           ) : (
             <div className="text-white">No tasks to display</div>
           )}
+        </div>
+        <div className="flex justify-center items-center w-full p-5">
+          <Button
+            id="button-logout"
+            className="text-black font-bold bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500"
+            onClick={handleLogout}
+          >
+            Logout
+          </Button>
         </div>
       </DefaultLayout>
     </>

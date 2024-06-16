@@ -1,40 +1,52 @@
 import DefaultLayout from "@/layouts/default";
 import { Checkbox } from "@nextui-org/checkbox";
-import { Button, Card, CardHeader } from "@nextui-org/react";
+import { Button, Card } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TodoObject } from "./Models/Todo";
+import {
+  fetchTodos,
+  addTodo as addTodoAPI,
+  updateTodo as updateTodoAPI,
+  deleteTodo as deleteTodoAPI,
+} from "@/pages/api/api";
 
-// next line is to tell react that this is a functional component.
 const TestPage: React.FunctionComponent = () => {
   const [todo, setTodo] = useState<string>(""); // We are making sure this is a string.
   const [todos, setTodos] = useState<TodoObject[]>([]); // Fetching multiple todos and storing them
   const [editId, setEditId] = useState<number | null>(null); // To track which todo is being edited.
 
-  const addTodo = () => {
+  useEffect(() => {
+    const fetchInitialTodos = async () => {
+      const todos = await fetchTodos();
+      setTodos(todos);
+    };
+
+    fetchInitialTodos();
+  }, []);
+
+  const addTodo = async () => {
     if (editId) {
-      // If editId is not null, update the existing todo
-      setTodos(todos.map((t) => (t.id === editId ? { ...t, value: todo } : t)));
+      // update existing todo if not null
+      const updatedTodo = await updateTodoAPI(editId, {
+        userId: 1,
+        value: todo,
+        done: false,
+      });
+      setTodos(todos.map((t) => (t.id === editId ? updatedTodo : t)));
       setEditId(null);
     } else {
-      // Otherwise, add a new todo
-      setTodos([
-        { userId: 1, id: Date.now(), value: todo, done: false },
-        ...todos,
-      ]);
+      // add new since null
+      const newTodo = await addTodoAPI({ userId: 1, value: todo, done: false });
+      setTodos([newTodo, ...todos]);
+      console.log("Todo added", todos.length);
     }
     setTodo("");
-    // console.log("setTodos", todos[0].id);
   };
-  //   const logTest = () => {
-  //     console.log("setTodos", setTodos);
-  //   };
 
-  const deleteTodo = (id: number) => {
+  const deleteTodo = async (id: number) => {
+    await deleteTodoAPI(id);
     setTodos(todos.filter((t) => t.id !== id));
-  };
-  const checkTodo = () => {
-    // console.log("setTodos", todos.length);
   };
 
   const editTodo = (id: number, value: string) => {
@@ -42,8 +54,15 @@ const TestPage: React.FunctionComponent = () => {
     setEditId(id);
   };
 
-  const toggleTodoStatus = (id: number) => {
-    setTodos(todos.map((t) => (t.id === id ? { ...t, done: !t.done } : t)));
+  const toggleTodoStatus = async (id: number) => {
+    const todoToUpdate = todos.find((t) => t.id === id);
+    if (todoToUpdate) {
+      const updatedTodo = await updateTodoAPI(id, {
+        ...todoToUpdate,
+        done: !todoToUpdate.done,
+      });
+      setTodos(todos.map((t) => (t.id === id ? updatedTodo : t)));
+    }
   };
 
   const incompleteTodos = todos.filter((todo) => !todo.done);

@@ -17,8 +17,7 @@ export default function Home() {
   }, [auth, router]);
 
   return (
-    <main className="flex flex-col items-center justify-center h-screen bg-gray-100">
-      <h1 className="text-4xl text-black"> Firebase OTP Sign-in</h1>
+    <main>
       <Login />
     </main>
   );

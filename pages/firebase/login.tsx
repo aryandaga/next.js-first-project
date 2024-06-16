@@ -59,7 +59,7 @@ export default function Login() {
       await confirmationResult.confirm(otp);
       setOtp("");
       alert("OTP verified successfully");
-      router.push("/home");
+      router.push("/test3");
     } catch (error) {
       console.error("Error verifying OTP", error);
     }

@@ -5,7 +5,7 @@ import {
   RecaptchaVerifier,
   signInWithPhoneNumber,
 } from "firebase/auth";
-import { app } from "@/pages/firebase/config";
+import { auth } from "@/firebase/config";
 import { useRouter } from "next/navigation";
 import { Button } from "@nextui-org/button";
 
@@ -15,7 +15,6 @@ export default function Login() {
   const [confirmationResult, setConfirmationResult] = useState<any>(null);
   const [otpSent, setOtpSent] = useState(false);
 
-  const auth = getAuth(app);
   const router = useRouter();
 
   useEffect(() => {

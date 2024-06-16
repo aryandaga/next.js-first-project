@@ -3,7 +3,7 @@ import { Checkbox } from "@nextui-org/checkbox";
 import { Button, Card } from "@nextui-org/react";
 import { Image } from "@nextui-org/react";
 import { useState, useEffect } from "react";
-import { TodoObject } from "./Models/Todo";
+import { TodoObject } from "@/types";
 import {
   fetchTodos,
   addTodo as addTodoAPI,
@@ -12,7 +12,7 @@ import {
 } from "@/pages/api/api";
 import { useRouter } from "next/navigation";
 import { getAuth, signOut } from "firebase/auth";
-import { app } from "@/pages/firebase/config";
+import { auth } from "@/firebase/config";
 
 // export function dashbaord() {
 
@@ -75,7 +75,6 @@ const TestPage: React.FunctionComponent = () => {
   const incompleteTodos = todos.filter((todo) => !todo.done);
   const completeTodos = todos.filter((todo) => todo.done);
 
-  const auth = getAuth(app);
   const router = useRouter();
 
   const handleLogout = async () => {

@@ -27,7 +27,7 @@ export default function Login() {
         "expired-callback": () => {},
       }
     );
-  }, [auth]);
+  }, []);
 
   const handlePhoneNumberChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setPhoneNumber(e.target.value);
@@ -47,7 +47,6 @@ export default function Login() {
       );
       setConfirmationResult(confirmation);
       setOtpSent(true);
-      setPhoneNumber("");
       alert("OTP sent successfully");
     } catch (error) {
       console.error("Error sending OTP", error);
@@ -69,15 +68,14 @@ export default function Login() {
     <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
       <h1 className=" text-4xl text-white font-sans">LOGIN</h1>
       <div className="border-gray-800 p-5 mr-8 ml-8 rounded-xl shadow-lg w-[90%] max-w-md">
-        {!otpSent ? (
-          <div id="recaptcha-container" className="mb-4"></div>
-        ) : null}
+        {!otpSent && <div id="recaptcha-container" className="mb-4"></div>}
         <input
           type="tel"
           placeholder="Enter Phone Number (without +91)"
           value={phoneNumber}
           onChange={handlePhoneNumberChange}
-          className="w-full px-4 py-2 mb-4 rounded-xl border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white"
+          readOnly={otpSent} // Make input read-only when OTP is sent
+          className={`w-full px-4 py-2 mb-4 rounded-xl border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 text-white ${otpSent ? "bg-gray-800" : ""}`} // Adjust background color when read-only
         />
         {otpSent && (
           <input

@@ -25,8 +25,9 @@ const TestPage: React.FunctionComponent = () => {
 
   useEffect(() => {
     const fetchInitialTodos = async () => {
-      const todos = await fetchTodos();
-      setTodos(todos);
+      const allTodos = await fetchTodos();
+      const limitedTodos = allTodos.slice(0, 20); // first 20 todos
+      setTodos(limitedTodos);
     };
 
     fetchInitialTodos();
@@ -240,13 +241,13 @@ const TestPage: React.FunctionComponent = () => {
           )}
         </div>
         <div className="flex justify-center items-center w-full p-5">
-          <Button
+          {/* <Button
             id="button-logout"
             className="text-black font-bold bg-gradient-to-r from-green-400 to-blue-500 hover:from-pink-500 hover:to-yellow-500"
             onClick={handleLogout}
           >
             Logout
-          </Button>
+          </Button> */}
         </div>
       </DefaultLayout>
     </>

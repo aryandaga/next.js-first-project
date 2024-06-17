@@ -14,6 +14,9 @@ import {
 } from "@nextui-org/react";
 import NextLink from "next/link";
 import clsx from "clsx";
+import { useRouter } from "next/navigation";
+import { getAuth, signOut } from "firebase/auth";
+import { auth } from "@/firebase/config";
 
 import { siteConfig } from "@/config/site";
 import { ThemeSwitch } from "@/components/theme-switch";
@@ -27,6 +30,17 @@ import {
 import { Logo } from "@/components/icons";
 
 export const Navbar = () => {
+  const router = useRouter();
+
+  const handleLogout = async () => {
+    try {
+      await signOut(auth);
+      router.push("/firebase/login");
+    } catch (error) {
+      console.error("Error signing out", error);
+    }
+  };
+
   const searchInput = (
     <Input
       aria-label="Search"
@@ -63,7 +77,7 @@ export const Navbar = () => {
               <NextLink
                 className={clsx(
                   linkStyles({ color: "foreground" }),
-                  "data-[active=true]:text-primary data-[active=true]:font-medium",
+                  "data-[active=true]:text-primary data-[active=true]:font-medium"
                 )}
                 color="foreground"
                 href={item.href}
@@ -94,14 +108,11 @@ export const Navbar = () => {
         <NavbarItem className="hidden lg:flex">{searchInput}</NavbarItem>
         <NavbarItem className="hidden md:flex">
           <Button
-            isExternal
-            as={Link}
             className="text-sm font-normal text-default-600 bg-default-100"
-            href={siteConfig.links.sponsor}
-            startContent={<HeartFilledIcon className="text-danger" />}
+            onClick={handleLogout}
             variant="flat"
           >
-            Sponsor
+            Logout
           </Button>
         </NavbarItem>
       </NavbarContent>

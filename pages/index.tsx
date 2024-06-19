@@ -1,56 +1,60 @@
-"use client";
-import React, { useState, useEffect } from "react";
-import AllTasks from "@/components/todo/AllTasks";
-import AddTask from "@/components/todo/AddTask";
-import TaskList from "@/components/todo/TaskList";
-import { TodoObject } from "@/types";
+import { Link, Snippet, Code, button as buttonStyles } from "@nextui-org/react";
 
-const HomePage: React.FC = () => {
-  const [tasks, setTasks] = useState<TodoObject[]>([]);
+import { siteConfig } from "@/config/site";
+import { title, subtitle } from "@/components/primitives";
+import { GithubIcon } from "@/components/icons";
+import DefaultLayout from "@/layouts/default";
 
-  useEffect(() => {
-    // Fetch tasks from the API or initialize with sample data
-    const fetchTasks = async () => {
-      // Example API call to fetch tasks
-      const response = await fetch("/api/tasks");
-      const data = await response.json();
-      setTasks(data);
-    };
-
-    fetchTasks();
-  }, []);
-
-  const addTask = (taskValue: string) => {
-    const newTask: TodoObject = {
-      userId: 1, // example user ID
-      id: tasks.length + 1,
-      value: taskValue,
-      done: false,
-    };
-    setTasks([...tasks, newTask]);
-  };
-
-  const toggleTask = (id: number) => {
-    setTasks(
-      tasks.map((task) =>
-        task.id === id ? { ...task, done: !task.done } : task
-      )
-    );
-  };
-
+export default function IndexPage() {
   return (
-    <div className="flex flex-col items-center justify-center min-h-screen bg-black text-white">
-      <h1 className="text-4xl text-white font-sans">Task Manager</h1>
-      <div className="w-[90%] max-w-md">
-        <AddTask onAddTask={addTask} />
-        <AllTasks tasks={tasks} />
-        <TaskList tasks={tasks} onToggleTask={toggleTask} />
-      </div>
-      <footer className="mt-8">
-        <p className="text-gray-500">Made by Aryan Daga</p>
-      </footer>
-    </div>
-  );
-};
+    <DefaultLayout>
+      <section className="flex flex-col items-center justify-center gap-4 py-8 md:py-10">
+        <div className="inline-block max-w-lg text-center justify-center">
+          <title>Redirecting to Another page in HTML</title>
+          <meta httpEquiv="refresh" content="2; url ='firebase'" />
 
-export default HomePage;
+          <h1 className={title()}>Make&nbsp;</h1>
+          <h1 className={title({ color: "violet" })}>beautiful&nbsp;</h1>
+          <br />
+          <h1 className={title()}>
+            websites regardless of your design experience.
+          </h1>
+          <h4 className={subtitle({ class: "mt-4" })}>
+            Beautiful, fast and modern React UI library.
+          </h4>
+        </div>
+
+        <div className="flex gap-3">
+          <Link
+            isExternal
+            className={buttonStyles({
+              color: "primary",
+              radius: "full",
+              variant: "shadow",
+            })}
+            href={siteConfig.links.docs}
+          >
+            Documentation
+          </Link>
+          <Link
+            isExternal
+            className={buttonStyles({ variant: "bordered", radius: "full" })}
+            href={siteConfig.links.github}
+          >
+            <GithubIcon size={20} />
+            GitHub
+          </Link>
+        </div>
+
+        <div className="mt-8">
+          <Snippet hideCopyButton hideSymbol variant="bordered">
+            <span>
+              Get started by editing{" "}
+              <Code color="primary">pages/index.tsx</Code>
+            </span>
+          </Snippet>
+        </div>
+      </section>
+    </DefaultLayout>
+  );
+}

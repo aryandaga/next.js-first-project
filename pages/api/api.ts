@@ -1,4 +1,4 @@
-const API_URL = 'https://jsonplaceholder.typicode.com/todos';
+const API_URL = 'https://library-nest.onrender.com/todos';
 
 export interface TodoObject {
   userId: number;
@@ -9,8 +9,14 @@ export interface TodoObject {
 
 
 export const fetchTodos = async (): Promise<TodoObject[]> => {
-  const response = await fetch(API_URL);
+  const response = await fetch(API_URL, {
+    method: 'GET',
+    headers: {
+      'Content-Type': 'application/json',
+    },
+  });
   const data = await response.json();
+  console.log(data);
   return data.map((todo: any) => ({
     userId: todo.userId,
     id: todo.id,
@@ -21,6 +27,11 @@ export const fetchTodos = async (): Promise<TodoObject[]> => {
 
 
 export const addTodo = async (todo: Omit<TodoObject, 'id'>): Promise<TodoObject> => {
+  console.log({
+    userId: todo.userId,
+    title: todo.value,
+    completed: todo.done,
+  });
   const response = await fetch(API_URL, {
     method: 'POST',
     headers: {
